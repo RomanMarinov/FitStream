@@ -3,13 +3,16 @@ package com.example.fitstream.presentation.main_activity_screen
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
@@ -36,6 +39,9 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setContentView(binding.root)
 
+        window.statusBarColor = ContextCompat.getColor(this, android.R.color.white)
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -56,8 +62,22 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.workouts.collect {
                     allWorkouts = it
-                    adapter.submitList(it)
+                    if (it.isNotEmpty()) {
+                        adapter.submitList(it)
+                    }
                 }
+            }
+        }
+
+        binding.etSearch.addTextChangedListener { text ->
+            val textQuery = text.toString().trim()
+            val filteredList = if (textQuery.isEmpty()) {
+                allWorkouts
+            } else {
+                allWorkouts.filter { it.title.contains(textQuery, ignoreCase = true) }
+            }
+            if (filteredList.isNotEmpty()) {
+                adapter.submitList(filteredList)
             }
         }
 

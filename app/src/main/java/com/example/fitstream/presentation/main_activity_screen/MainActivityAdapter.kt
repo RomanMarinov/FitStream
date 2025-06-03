@@ -1,6 +1,7 @@
 package com.example.fitstream.presentation.main_activity_screen
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,7 +12,6 @@ import com.example.fitstream.domain.model.Workout
 class MainActivityAdapter(
     private val onClickPlay: (id: Int) -> Unit
 ) : ListAdapter<Workout, MainActivityAdapter.ViewHolder>(DetailDiffUtilCallback()) {
-    private var workouts: List<Workout> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,20 +20,78 @@ class MainActivityAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(workouts[position])
-    }
-
-    override fun submitList(list: List<Workout>?) {
-        super.submitList(list)
-        list?.let { this.workouts = it.toList() }
+        holder.bind(getItem(position))
     }
 
     inner class ViewHolder(private val binding: ItemWorkoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(workout: Workout) {
             binding.tvTitle.text = workout.title
-            binding.tvDescription.text = workout.description ?: "нет описания"
-            binding.tvDuration.text = workout.duration.plus(" мин")
+
+            if (workout.description == null) {
+                binding.tvDescription.visibility = View.GONE
+                binding.lottieLoadingDesc.visibility = View.VISIBLE
+                binding.lottieLoadingDesc.playAnimation()
+            } else {
+                binding.lottieLoadingDesc.visibility = View.GONE
+                binding.lottieLoadingDesc.cancelAnimation()
+                binding.tvDescription.visibility = View.VISIBLE
+                binding.tvDescription.text = workout.description
+            }
+
+
+
+//            if ()
+//
+//
+            val durationInt = workout.duration.toIntOrNull()
+            if (durationInt != null) {
+                binding.tvDuration.text = workout.duration.plus(" мин")
+                binding.tvDuration.visibility = View.VISIBLE
+                binding.lottieLoadingMin.visibility = View.GONE
+                binding.lottieLoadingMin.cancelAnimation()
+            } else {
+                binding.tvDuration.visibility = View.GONE
+                binding.lottieLoadingMin.visibility = View.VISIBLE
+                binding.lottieLoadingMin.playAnimation()
+            }
+
+//
+//
+//
+//
+//            workout.duration
+//
+//            if (durationInt == null) {
+//
+//            } else {
+//
+//            }
+
+
+//
+//
+//            try {
+//
+//            } catch (e: Exception) {
+//
+//            }
+//
+//            if (workout.duration == "44") {
+//
+//                binding.tvDuration.visibility = View.GONE
+//                binding.lottieLoadingMin.visibility = View.VISIBLE
+//                binding.lottieLoadingMin.playAnimation()
+//            } else {
+//                binding.tvDuration.text = workout.duration.plus(" мин")
+//                binding.tvDuration.visibility = View.VISIBLE
+//                binding.lottieLoadingMin.visibility = View.GONE
+//                binding.lottieLoadingMin.cancelAnimation()
+//            }
+
+//            binding.tvDuration.text = workout.duration.plus(" мин")
+
+
         }
     }
 }
