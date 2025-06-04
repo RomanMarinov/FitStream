@@ -2,11 +2,8 @@ package com.example.fitstream.presentation.main_activity_screen
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -21,7 +18,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitstream.R
 import com.example.fitstream.databinding.ActivityMainBinding
-import com.example.fitstream.databinding.ActivitySplashBinding
 import com.example.fitstream.domain.model.Workout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

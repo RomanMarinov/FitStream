@@ -39,11 +39,6 @@ class MainActivityAdapter(
                 binding.tvDescription.text = workout.description
             }
 
-
-
-//            if ()
-//
-//
             val durationInt = workout.duration.toIntOrNull()
             if (durationInt != null) {
                 binding.tvDuration.text = workout.duration.plus(" мин")
@@ -55,43 +50,6 @@ class MainActivityAdapter(
                 binding.lottieLoadingMin.visibility = View.VISIBLE
                 binding.lottieLoadingMin.playAnimation()
             }
-
-//
-//
-//
-//
-//            workout.duration
-//
-//            if (durationInt == null) {
-//
-//            } else {
-//
-//            }
-
-
-//
-//
-//            try {
-//
-//            } catch (e: Exception) {
-//
-//            }
-//
-//            if (workout.duration == "44") {
-//
-//                binding.tvDuration.visibility = View.GONE
-//                binding.lottieLoadingMin.visibility = View.VISIBLE
-//                binding.lottieLoadingMin.playAnimation()
-//            } else {
-//                binding.tvDuration.text = workout.duration.plus(" мин")
-//                binding.tvDuration.visibility = View.VISIBLE
-//                binding.lottieLoadingMin.visibility = View.GONE
-//                binding.lottieLoadingMin.cancelAnimation()
-//            }
-
-//            binding.tvDuration.text = workout.duration.plus(" мин")
-
-
         }
     }
 }

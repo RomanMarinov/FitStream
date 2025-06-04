@@ -1,7 +1,6 @@
 package com.example.fitstream.data.workout
 
 import com.example.fitstream.data.util.ApiService
-import com.example.fitstream.data.workout.remote.dto.VideoWorkoutDTO
 import com.example.fitstream.domain.model.VideoWorkout
 import com.example.fitstream.domain.model.Workout
 import com.example.fitstream.domain.repository.WorkoutRepository

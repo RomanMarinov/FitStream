@@ -1,7 +1,5 @@
 package com.example.fitstream.di
 
-//import ApiService
-//import android.annotation.SuppressLint
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,11 +12,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import com.example.fitstream.BuildConfig
 import com.example.fitstream.data.util.ApiService
-import retrofit2.create
 
 @Module
 @InstallIn(SingletonComponent::class)
-//@SuppressLint("LogNotTimber")
 class NetworkModule {
 
     @Provides
@@ -59,7 +55,6 @@ class NetworkModule {
     @Singleton
     fun provideApiService(
         retrofit: Retrofit
-//    ): ApiService = retrofit.create()
     ): ApiService = retrofit.create(ApiService::class.java)
 
 }
