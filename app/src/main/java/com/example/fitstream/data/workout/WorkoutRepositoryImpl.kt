@@ -1,10 +1,10 @@
 package com.example.fitstream.data.workout
 
+import android.util.Log
 import com.example.fitstream.data.util.ApiService
 import com.example.fitstream.domain.model.VideoWorkout
 import com.example.fitstream.domain.model.Workout
 import com.example.fitstream.domain.repository.WorkoutRepository
-import com.google.android.exoplayer2.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
 

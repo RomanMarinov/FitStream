@@ -29,7 +29,6 @@ class MainActivityViewModel @Inject constructor(
         getWorkouts()
     }
 
-
     private fun getWorkouts() {
         viewModelScope.launch(Dispatchers.IO) {
             val workouts = workoutRepository.getWorkouts()

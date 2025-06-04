@@ -3,11 +3,12 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt)
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
     namespace = "com.example.fitstream"
-    compileSdk = 34
+    compileSdk = 35
 
     buildFeatures {
         dataBinding = true
@@ -17,13 +18,13 @@ android {
     defaultConfig {
         applicationId = "com.example.fitstream"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "\"http://ref.test.kolsa.ru/\"")
+        buildConfigField("String", "BASE_URL", "\"https://ref.test.kolsa.ru\"")
     }
 
     buildTypes {
@@ -70,7 +71,11 @@ dependencies {
     // Kotlin serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+//    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+
+    implementation("androidx.media3:media3-exoplayer:1.7.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.7.1")
+    implementation("androidx.media3:media3-ui:1.7.1")
 
 //    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
    // implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.21")

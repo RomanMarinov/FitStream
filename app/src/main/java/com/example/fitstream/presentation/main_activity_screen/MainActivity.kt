@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitstream.R
 import com.example.fitstream.databinding.ActivityMainBinding
 import com.example.fitstream.domain.model.Workout
+import com.example.fitstream.presentation.detail_screen.DetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -67,9 +68,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.videWorkout.observe(this) {
-            Log.d("4444", " videWorkout=" + it)
-
+        viewModel.videWorkout.observe(this) { workout ->
+            Log.d("4444", " videWorkout=$workout")
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("workout", workout)
+            startActivity(intent)
         }
 
         binding.etSearch.addTextChangedListener { text ->
