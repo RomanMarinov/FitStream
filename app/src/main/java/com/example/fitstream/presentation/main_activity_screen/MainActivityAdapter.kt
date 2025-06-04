@@ -50,6 +50,10 @@ class MainActivityAdapter(
                 binding.lottieLoadingMin.visibility = View.VISIBLE
                 binding.lottieLoadingMin.playAnimation()
             }
+
+            binding.cardView.setOnClickListener {
+                onClickPlay(workout.id)
+            }
         }
     }
 }

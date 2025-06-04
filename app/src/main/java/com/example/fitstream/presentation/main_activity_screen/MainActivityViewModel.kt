@@ -1,10 +1,12 @@
 package com.example.fitstream.presentation.main_activity_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitstream.domain.model.VideoWorkout
 import com.example.fitstream.domain.model.Workout
 import com.example.fitstream.domain.repository.WorkoutRepository
+import com.example.fitstream.presentation.util.VideoStreamSingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +22,8 @@ class MainActivityViewModel @Inject constructor(
     private var _workouts: MutableStateFlow<List<Workout>> = MutableStateFlow(emptyList())
     val workouts: StateFlow<List<Workout>> = _workouts
 
-    private var _videWorkout: MutableStateFlow<VideoWorkout?> = MutableStateFlow(null)
-    val videWorkout: StateFlow<VideoWorkout?> = _videWorkout
+    private var _videWorkout = VideoStreamSingleLiveEvent<VideoWorkout>()
+    val videWorkout: VideoStreamSingleLiveEvent<VideoWorkout> = _videWorkout
 
     init {
         getWorkouts()
@@ -33,6 +35,7 @@ class MainActivityViewModel @Inject constructor(
             val workouts = workoutRepository.getWorkouts()
             workouts?.let {
                 _workouts.value = it
+                Log.d("4444", " getWorkouts it=$it")
             }
         }
     }
@@ -41,9 +44,9 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val videWorkout = workoutRepository.getVideoWorkout(id = id)
             videWorkout?.let {
-                _videWorkout.value = it
+                Log.d("4444", " getVideWorkout it=" + it)
+                _videWorkout.postEvent(it)
             }
-
         }
     }
 }

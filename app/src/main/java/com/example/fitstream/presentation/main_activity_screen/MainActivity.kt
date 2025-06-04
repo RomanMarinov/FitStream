@@ -1,7 +1,9 @@
 package com.example.fitstream.presentation.main_activity_screen
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -63,6 +65,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        viewModel.videWorkout.observe(this) {
+            Log.d("4444", " videWorkout=" + it)
+
         }
 
         binding.etSearch.addTextChangedListener { text ->
