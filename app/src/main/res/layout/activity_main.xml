@@ -10,29 +10,58 @@
         android:background="@color/white"
         tools:context=".presentation.main_activity_screen.MainActivity">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchInputLayout"
+        <LinearLayout
+            android:id="@+id/llTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:hintEnabled="false"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:baselineAligned="false"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSearch"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchInputLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:hintAnimationEnabled="false"
-                android:lines="1"
-                android:imeOptions="actionDone"
-                android:background="@drawable/background_grey_border"
-                android:hint="Поиск по названию" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_grey_border"
+                    android:hint="@string/search_name"
+                    app:hintTextColor="@color/color_hint_etSearch"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filterInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:hintEnabled="false">
+
+                <com.example.fitstream.presentation.main_activity_screen.ExposedDropdownMenu
+                    android:id="@+id/filterDropdown"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_grey_border"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:hint="@string/filter_name"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -47,7 +76,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/llTop"
             tools:listitem="@layout/item_workout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

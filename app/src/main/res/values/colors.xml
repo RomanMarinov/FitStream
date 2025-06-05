@@ -3,5 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_turquoise">#5EDFEA</color>
+    <color name="color_hint_etSearch">#888888</color>
 
+    <color name="transparent_item_map_info">#88000000</color> // не из Figma, т.к. с теми параметрами выглядит некрасиво
 </resources>

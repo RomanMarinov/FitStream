@@ -20,38 +20,37 @@
             app:cardCornerRadius="10dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="16dp"
                 android:background="@drawable/background_blue_rounded"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/tvTitle"
+                    style="@style/TextAppearance.FitStream.WorkoutTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Заголовок"
-                    style="@style/TextAppearance.FitStream.WorkoutTitle"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     app:layout_constraintTop_toTopOf="parent"
-                    />
+                    tools:text="@string/title" />
 
                 <TextView
                     android:id="@+id/tvDescription"
+                    style="@style/TextAppearance.FitStream.Description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Описание"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    style="@style/TextAppearance.FitStream.Description"
-                    android:textColor="@color/white"
-                    app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+                    android:textColor="@color/black"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                    tools:text="@string/desc" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/lottieLoadingDesc"
@@ -60,23 +59,21 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
-                    app:lottie_loop="true"
-                    app:lottie_colorFilter="@color/white"
-                    app:lottie_repeatMode="restart"
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-                    app:lottie_rawRes="@raw/lottie_loading" />
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/lottie_loading"
+                    app:lottie_repeatMode="restart" />
 
                 <TextView
                     android:id="@+id/tvDuration"
+                    style="@style/TextAppearance.FitStream.AnotherDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="время"
                     android:gravity="end"
-                    style="@style/TextAppearance.FitStream.AnotherDescription"
-                    android:textColor="@color/white"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+                    android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+                    tools:text="@string/time" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/lottieLoadingMin"
@@ -84,11 +81,11 @@
                     android:layout_height="25dp"
                     android:layout_gravity="end"
                     android:visibility="gone"
-                    app:lottie_loop="true"
-                    app:lottie_repeatMode="restart"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDescription"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:lottie_rawRes="@raw/lottie_loading" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/lottie_loading"
+                    app:lottie_repeatMode="restart" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

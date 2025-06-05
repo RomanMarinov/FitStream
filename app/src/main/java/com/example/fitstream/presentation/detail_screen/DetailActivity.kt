@@ -2,7 +2,6 @@ package com.example.fitstream.presentation.detail_screen
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +36,6 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -70,7 +68,6 @@ class DetailActivity : AppCompatActivity() {
             .Builder(this)
             .setTrackSelector(trackSelector)
             .build()
-        Log.d("4444", " url my ulr=" + BuildConfig.BASE_URL.plus(workout?.link))
         val videoUri = BuildConfig.BASE_URL.plus(workout?.link)
         val mediaItem = MediaItem.fromUri(videoUri)
         exoPlayer.setMediaItem(mediaItem)

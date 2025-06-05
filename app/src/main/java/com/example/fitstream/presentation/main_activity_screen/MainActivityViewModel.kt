@@ -1,6 +1,5 @@
 package com.example.fitstream.presentation.main_activity_screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitstream.domain.model.VideoWorkout
@@ -34,7 +33,6 @@ class MainActivityViewModel @Inject constructor(
             val workouts = workoutRepository.getWorkouts()
             workouts?.let {
                 _workouts.value = it
-                Log.d("4444", " getWorkouts it=$it")
             }
         }
     }
@@ -43,7 +41,6 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val videWorkout = workoutRepository.getVideoWorkout(id = id)
             videWorkout?.let {
-                Log.d("4444", " getVideWorkout it=" + it)
                 _videWorkout.postEvent(it)
             }
         }
