@@ -25,3 +25,7 @@ Kotlin, Android XML
 - lottie animation <br/>
 
 ## Демонстрация  
+<video src="https://github.com/user-attachments/assets/202f3a6e-0047-4228-ad20-b2c5d0a76a94"></video> 
+
+
+
