@@ -13,35 +13,66 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class WorkoutUiState {
+    data object Loading : WorkoutUiState()
+    data class Success(val workouts: List<Workout>) : WorkoutUiState()
+    data class Error(val message: String) : WorkoutUiState()
+    data object Empty : WorkoutUiState()
+}
+
+sealed class VideoUIState {
+    data class Success(val workoutVideo: VideoWorkout) : VideoUIState()
+    data object Empty : VideoUIState()
+    data class Error(val message: String) : VideoUIState()
+    data object Loading : VideoUIState()
+}
+
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val workoutRepository: WorkoutRepository
 ) : ViewModel() {
 
-    private var _workouts: MutableStateFlow<List<Workout>> = MutableStateFlow(emptyList())
-    val workouts: StateFlow<List<Workout>> = _workouts
+    private val _workoutsState = MutableStateFlow<WorkoutUiState>(WorkoutUiState.Loading)
+    val workoutsState: StateFlow<WorkoutUiState> = _workoutsState
 
-    private var _videWorkout = VideoStreamSingleLiveEvent<VideoWorkout>()
-    val videWorkout: VideoStreamSingleLiveEvent<VideoWorkout> = _videWorkout
+    private var _videWorkoutUIState = VideoStreamSingleLiveEvent<VideoUIState>()
+    val videWorkoutUIState: VideoStreamSingleLiveEvent<VideoUIState> = _videWorkoutUIState
+
 
     init {
         getWorkouts()
     }
 
-    private fun getWorkouts() {
+    fun getWorkouts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val workouts = workoutRepository.getWorkouts()
-            workouts?.let {
-                _workouts.value = it
+            _workoutsState.value = WorkoutUiState.Loading
+            val result = workoutRepository.getWorkouts()
+
+            result.onSuccess { workouts ->
+                if (workouts.isNotEmpty()) {
+                    _workoutsState.value = WorkoutUiState.Success(workouts)
+                } else {
+                    _workoutsState.value = WorkoutUiState.Empty
+                }
+            }.onFailure { error ->
+                _workoutsState.value = WorkoutUiState.Error(error.message ?: "ошибка")
             }
         }
     }
 
     fun getVideWorkout(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val videWorkout = workoutRepository.getVideoWorkout(id = id)
-            videWorkout?.let {
-                _videWorkout.postEvent(it)
+            _videWorkoutUIState.postEvent(VideoUIState.Loading)
+
+            val result = workoutRepository.getVideoWorkout(id = id)
+            result.onSuccess { videoWorkout ->
+                _videWorkoutUIState.postEvent(VideoUIState.Success(videoWorkout))
+            }.onFailure { error ->
+                _videWorkoutUIState.postEvent(
+                    VideoUIState.Error(
+                        error.message ?: "Ошибка загрузки видео"
+                    )
+                )
             }
         }
     }

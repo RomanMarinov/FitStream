@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -99,26 +99,59 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
 
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.workouts.collect { workouts ->
-                    allWorkouts = workouts
+                viewModel.workoutsState.collect { state ->
+                    when(state) {
+                        WorkoutUiState.Empty -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.recyclerView.visibility = View.GONE
+                            binding.tvError.visibility = View.VISIBLE
+                            binding.btTryAgain.visibility = View.VISIBLE
+                            binding.tvError.text = getString(R.string.empty_list)
+                        }
+                        is WorkoutUiState.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.recyclerView.visibility = View.GONE
+                            binding.tvError.visibility = View.VISIBLE
+                            binding.btTryAgain.visibility = View.VISIBLE
+                            binding.tvError.text = state.message
+                        }
+                        WorkoutUiState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.recyclerView.visibility = View.GONE
+                            binding.tvError.visibility = View.GONE
+                            binding.btTryAgain.visibility = View.GONE
+                        }
+                        is WorkoutUiState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.recyclerView.visibility = View.VISIBLE
+                            binding.tvError.visibility = View.GONE
+                            binding.btTryAgain.visibility = View.GONE
+                            allWorkouts = state.workouts
 
-                    val types = workouts.map { it.type }.distinct().sorted()
-                    if (filterDropWorkouts?.isNotEmpty() == true) {
-                        initAdapter(types = types)
-                        binding.filterDropdown.setText(filterDropdownPosition.toString(), false)
-                        mainActivityAdapter.submitList(filterDropWorkouts)
-                    } else if (!etSearchList.isNullOrEmpty()) {
-                        initAdapter(types = types)
-                        mainActivityAdapter.submitList(etSearchList)
-                    }
-                    else if (workouts.isNotEmpty()) {
-                        initAdapter(types = types)
-                        mainActivityAdapter.submitList(workouts)
+                            val types = state.workouts.map { it.type }.distinct().sorted()
+                            if (filterDropWorkouts?.isNotEmpty() == true) {
+                                initAdapter(types = types)
+                                binding.filterDropdown.setText(filterDropdownPosition.toString(), false)
+                                mainActivityAdapter.submitList(filterDropWorkouts)
+                            } else if (!etSearchList.isNullOrEmpty()) {
+                                initAdapter(types = types)
+                                mainActivityAdapter.submitList(etSearchList)
+                            }
+                            else if (state.workouts.isNotEmpty()) {
+                                initAdapter(types = types)
+                                mainActivityAdapter.submitList(state.workouts)
+                            }
+                        }
                     }
                 }
             }
+        }
+
+        binding.btTryAgain.setOnClickListener {
+            viewModel.getWorkouts()
         }
 
         binding.filterDropdown.setOnItemClickListener { parent, _, position, _ ->
@@ -130,10 +163,26 @@ class MainActivity : AppCompatActivity() {
             mainActivityAdapter.submitList(filtered)
         }
 
-        viewModel.videWorkout.observe(this) { workout ->
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("workout", workout)
-            startActivity(intent)
+        viewModel.videWorkoutUIState.observe(this) { videWorkoutUIState ->
+            when(videWorkoutUIState) {
+                VideoUIState.Empty -> {
+                    binding.progressBar.visibility = View.GONE
+                    showToast(message = getString(R.string.no_data_try_again))
+                }
+                is VideoUIState.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    showToast(message = getString(R.string.error_try_again))
+                }
+                VideoUIState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is VideoUIState.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    val intent = Intent(this, DetailActivity::class.java)
+                    intent.putExtra("workout", videWorkoutUIState.workoutVideo)
+                    startActivity(intent)
+                }
+            }
         }
 
         binding.etSearch.addTextChangedListener { text ->
@@ -156,7 +205,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // Скрыть клаву
@@ -168,6 +216,10 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun initAdapter(types: List<Int>) {

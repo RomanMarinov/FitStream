@@ -37,7 +37,6 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideLogging(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        // Добавим уровень логирования
         level = HttpLoggingInterceptor.Level.BODY
     }
 

@@ -1,6 +1,5 @@
 package com.example.fitstream.data.workout
 
-import android.util.Log
 import com.example.fitstream.data.util.ApiService
 import com.example.fitstream.domain.model.VideoWorkout
 import com.example.fitstream.domain.model.Workout
@@ -12,33 +11,40 @@ import javax.inject.Singleton
 class WorkoutRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : WorkoutRepository {
-    override suspend fun getVideoWorkout(id: Int): VideoWorkout? {
+    override suspend fun getVideoWorkout(id: Int): Result<VideoWorkout> {
        return try {
             val response = apiService.getVideoWorkout(id = id)
-            if (response.isSuccessful) {
-                val result = response.body()
-                result?.mapToDomain()
-            } else {
-                null
-            }
+           if (response.isSuccessful) {
+               val result = response.body()?.mapToDomain()
+               if (result != null) {
+                   Result.success(result)
+               } else {
+                   Result.failure(Exception("Пустой ответ от сервера"))
+               }
+           } else {
+               Result.failure(Exception("Ошибка запроса"))
+           }
         } catch (e: Exception) {
-            Log.e("Exception", "try catch getVideoWorkout e=$e")
-            null
+            Result.failure(Exception(e.message))
         }
     }
 
-    override suspend fun getWorkouts(): List<Workout>? {
+    override suspend fun getWorkouts(): Result<List<Workout>> {
         return try {
             val response = apiService.getWorkouts()
+
             if (response.isSuccessful) {
-                val result = response.body()
-                result?.map { it.mapToDomain() }
+                val result = response.body()?.map { it.mapToDomain( ) }
+                if (!result.isNullOrEmpty()) {
+                    Result.success(result)
+                } else {
+                    Result.success(emptyList())
+                }
             } else {
-                null
+                Result.failure(Exception("Ошибка"))
             }
         } catch (e: Exception) {
-            Log.e("Exception", "try catch getVideoWorkout e=$e")
-            null
+            Result.failure(e)
         }
     }
 }

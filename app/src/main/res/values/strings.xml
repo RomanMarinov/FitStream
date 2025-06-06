@@ -5,4 +5,8 @@
     <string name="title">Заголовок</string>
     <string name="desc">Описание</string>
     <string name="time">время</string>
+    <string name="try_again">Попробовать еще раз</string>
+    <string name="empty_list">Список пуст</string>
+    <string name="no_data_try_again">Нет данных, попробуйте еще раз</string>
+    <string name="error_try_again">Ошибка, попробуйте еще раз</string>
 </resources>
