@@ -1,4 +1,4 @@
-package com.example.fitstream.presentation.main_activity_screen
+package com.example.fitstream.presentation.workout_screen
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitstream.databinding.ItemWorkoutBinding
-import com.example.fitstream.domain.model.Workout
+import com.example.fitstream.domain.model.workout.Workout
 
-class MainActivityAdapter(
+class WorkoutAdapter(
     private val onClickPlay: (id: Int) -> Unit
-) : ListAdapter<Workout, MainActivityAdapter.ViewHolder>(DetailDiffUtilCallback()) {
+) : ListAdapter<Workout, WorkoutAdapter.ViewHolder>(DetailDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

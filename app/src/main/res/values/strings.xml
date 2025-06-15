@@ -9,4 +9,6 @@
     <string name="empty_list">Список пуст</string>
     <string name="no_data_try_again">Нет данных, попробуйте еще раз</string>
     <string name="error_try_again">Ошибка, попробуйте еще раз</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

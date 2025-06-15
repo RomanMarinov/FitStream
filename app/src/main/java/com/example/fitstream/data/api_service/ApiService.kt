@@ -1,6 +1,6 @@
-package com.example.fitstream.data.util
+package com.example.fitstream.data.api_service
 
-import com.example.fitstream.data.workout.remote.dto.VideoWorkoutDTO
+import com.example.fitstream.data.workout.remote.dto.DetailDTO
 import com.example.fitstream.data.workout.remote.dto.WorkoutDTO
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,5 +14,5 @@ interface ApiService {
     @GET("get_video")
     suspend fun getVideoWorkout(
         @Query("id") id: Int
-    ): Response<VideoWorkoutDTO>
+    ): Response<DetailDTO>
 }

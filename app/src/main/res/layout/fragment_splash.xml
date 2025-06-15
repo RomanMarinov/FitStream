@@ -7,21 +7,17 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".presentation.main_activity_screen.MainActivity">
+        tools:context=".presentation.splash_screen.SplashFragment">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/navHost_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:defaultNavHost="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:navGraph="@navigation/nav_graph"
-            tools:layout="@layout/fragment_workout" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:lottie_rawRes="@raw/lottie_anim" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

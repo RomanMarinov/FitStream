@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import com.example.fitstream.BuildConfig
-import com.example.fitstream.data.util.ApiService
+import com.example.fitstream.data.api_service.ApiService
 
 @Module
 @InstallIn(SingletonComponent::class)

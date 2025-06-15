@@ -1,10 +1,10 @@
-package com.example.fitstream.domain.model
+package com.example.fitstream.domain.model.detail
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class VideoWorkout(
+data class Detail(
     val id: Int,
     val duration: String,
     val link: String
