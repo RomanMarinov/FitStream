@@ -34,8 +34,11 @@ class WorkoutViewModel @Inject constructor(
     val workoutsState: StateFlow<WorkoutUiState> = _workoutsState
 
     private val _workouts = mutableListOf<Workout>()
-    val workouts: List<Workout>
+    private val _workoutsFilteredByType = mutableListOf<Workout>()
+    private val workouts: List<Workout>
         get() = savedStateHandle["workouts"] ?: emptyList()
+    val workoutsByType: List<Workout>
+        get() = savedStateHandle["workoutsByType"] ?: emptyList()
 
     init {
         getWorkouts()
@@ -65,8 +68,9 @@ class WorkoutViewModel @Inject constructor(
         if (!alreadyDescription) {
             setWorkoutsStateSuccess(workouts = _workouts)
         } else {
-            val filtered: List<Workout> = _workouts.filter { it.type.description == selectedType }
-            setWorkoutsStateSuccess(workouts = filtered)
+            val workoutFilteredByType: List<Workout> = _workouts.filter { it.type.description == selectedType }
+            savedStateHandle["workoutsByType"] = workoutFilteredByType
+            setWorkoutsStateSuccess(workouts = workoutFilteredByType)
         }
     }
 
@@ -74,9 +78,11 @@ class WorkoutViewModel @Inject constructor(
         if (textQuery.isEmpty()) {
             setWorkoutsStateSuccess(workouts = _workouts)
         } else {
+            // если workouts стало 2 элемента
+            // а потом 0
+            //
 
-
-            val filteringWorkoutsByTitle: List<Workout> = workouts.filter {
+            val filteringWorkoutsByTitle: List<Workout> = workoutsByType.filter {
                 it.title.contains(
                     textQuery,
                     ignoreCase = true
