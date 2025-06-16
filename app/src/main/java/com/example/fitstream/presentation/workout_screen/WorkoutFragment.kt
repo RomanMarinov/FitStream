@@ -73,7 +73,7 @@ class WorkoutFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.workoutsState.collect { state ->
                     when (state) {
@@ -107,27 +107,17 @@ class WorkoutFragment : Fragment() {
                             binding.btTryAgain.visibility = View.GONE
                             allWorkouts = state.workouts
 
-//                            val types = state.workouts.map { it.type }.distinct().sorted()
-                            val types = state.workouts.map { it.type }.distinct().sortedBy { type -> type.id }
+                            initAdapter(types = state.workoutsType)
 
-                            Log.d("4444", " state.workouts=" + state.workouts)
-                            Log.d("4444", " types=" + types)
-
-
-
-                            if (filterDropWorkouts?.isNotEmpty() == true) {
-                                initAdapter(types = types)
-                                binding.filterDropdown.setText(
-                                    filterDropdownPositionDescription.toString(),
-                                    false
-                                )
-                                workoutAdapter.submitList(filterDropWorkouts)
-                            } else if (!etSearchList.isNullOrEmpty()) {
-                                initAdapter(types = types)
-                                workoutAdapter.submitList(etSearchList)
-                            } else if (state.workouts.isNotEmpty()) {
-                                initAdapter(types = types)
-                                workoutAdapter.submitList(state.workouts)
+                            when {
+                                filterDropWorkouts?.isNotEmpty() == true -> {
+                                    binding.filterDropdown.setText(
+                                        filterDropdownPositionDescription,
+                                        false
+                                    )
+                                }
+                                !etSearchList.isNullOrEmpty() -> workoutAdapter.submitList(etSearchList)
+                                state.workouts.isNotEmpty() -> workoutAdapter.submitList(state.workouts)
                             }
                         }
                     }

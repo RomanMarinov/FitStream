@@ -55,7 +55,7 @@ class DetailFragment : Fragment() {
     private fun initUI() {
         getVideWorkout()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.videoWorkoutUIState.collect { videoWorkoutUIState ->
                     when (videoWorkoutUIState) {
