@@ -1,7 +1,6 @@
 package com.example.fitstream.presentation.workout_screen
 
 import android.content.Context
-import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -23,7 +21,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitstream.R
 import com.example.fitstream.databinding.FragmentWorkoutBinding
-import com.example.fitstream.domain.model.workout.Workout
 import com.example.fitstream.domain.model.workout.WorkoutType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,18 +34,11 @@ class WorkoutFragment : Fragment() {
 
     private lateinit var arrayAdapter: ArrayAdapter<String>
 
-    private var allWorkouts = listOf<Workout>()
-    private var filterDropWorkouts: ArrayList<Workout>? = null
-
-    private var filterDropdownPositionDescription = ""
-    private var etSearchList: ArrayList<Workout>? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
+//    private var allWorkouts = listOf<Workout>()
+//    private var filterDropWorkouts: ArrayList<Workout>? = null
+//
+//    private var filterDropdownPositionDescription = ""
+//    private var etSearchList: ArrayList<Workout>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -105,20 +95,10 @@ class WorkoutFragment : Fragment() {
                             binding.recyclerWorkouts.visibility = View.VISIBLE
                             binding.tvError.visibility = View.GONE
                             binding.btTryAgain.visibility = View.GONE
-                            allWorkouts = state.workouts
+                            viewModel.setWorkoutsState(workouts = state.workouts)
 
                             initAdapter(types = state.workoutsType)
-
-                            when {
-                                filterDropWorkouts?.isNotEmpty() == true -> {
-                                    binding.filterDropdown.setText(
-                                        filterDropdownPositionDescription,
-                                        false
-                                    )
-                                }
-                                !etSearchList.isNullOrEmpty() -> workoutAdapter.submitList(etSearchList)
-                                state.workouts.isNotEmpty() -> workoutAdapter.submitList(state.workouts)
-                            }
+                            workoutAdapter.submitList(state.workouts)
                         }
                     }
                 }
@@ -131,46 +111,17 @@ class WorkoutFragment : Fragment() {
 
 
         binding.filterDropdown.setOnItemClickListener { parent, _, position, _ ->
-
             val selectedType = parent.getItemAtPosition(position) as String
-
-            val alreadyDescription = allWorkouts.any { it.type.description == selectedType }
-            if (!alreadyDescription) {
-                workoutAdapter.submitList(allWorkouts)
-            } else {
-                val filtered: List<Workout> = allWorkouts.filter { it.type.description == selectedType }
-                workoutAdapter.submitList(filtered)
-            }
+            viewModel.filteringWorkoutsByType(selectedType = selectedType)
         }
 
         binding.etSearch.addTextChangedListener { text ->
             val textQuery = text.toString().trim()
-            if (textQuery.isEmpty()) {
-                binding.filterInputLayout.visibility = View.VISIBLE
-                if (filterDropWorkouts.isNullOrEmpty()) {
-                    workoutAdapter.submitList(allWorkouts)
-                }
-            } else {
-                filterDropWorkouts = null
-                filterDropdownPositionDescription = ""
-                binding.filterDropdown.setText("", false)
-                binding.filterInputLayout.visibility = View.GONE
-                etSearchList = ArrayList(allWorkouts.filter {
-                    it.title.contains(
-                        textQuery,
-                        ignoreCase = true
-                    )
-                })
-
-                if (!etSearchList.isNullOrEmpty()) {
-                    workoutAdapter.submitList(etSearchList)
-                }
-            }
+            viewModel.filteringWorkoutsByTitle(textQuery = textQuery)
         }
 
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // Скрыть клаву
                 val imm =
                     requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
