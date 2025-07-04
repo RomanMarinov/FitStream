@@ -1,7 +1,6 @@
 package com.example.fitstream.presentation.workout_screen
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.fitstream.databinding.ItemWorkoutBinding
 import com.example.fitstream.domain.model.workout.Workout
 
-class WorkoutAdapter(
-    private val onClickPlay: (id: Int) -> Unit
-) : ListAdapter<Workout, WorkoutAdapter.ViewHolder>(DetailDiffUtilCallback()) {
+class WorkoutsAdapter(
+    private val onClickPlay: (id: Int, desc: String) -> Unit
+) : ListAdapter<Workout, WorkoutsAdapter.ViewHolder>(DetailDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,34 +24,20 @@ class WorkoutAdapter(
 
     inner class ViewHolder(private val binding: ItemWorkoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(workout: Workout) {
-            binding.tvTitle.text = workout.title
 
-            if (workout.description == null) {
-                binding.tvDescription.visibility = View.GONE
-                binding.lottieLoadingDesc.visibility = View.VISIBLE
-                binding.lottieLoadingDesc.playAnimation()
-            } else {
-                binding.lottieLoadingDesc.visibility = View.GONE
-                binding.lottieLoadingDesc.cancelAnimation()
-                binding.tvDescription.visibility = View.VISIBLE
-                binding.tvDescription.text = workout.description
-            }
+        fun bind(workout: Workout) = with(binding) {
+            tvTitle.text = workout.title
+            tvDescription.text = workout.description ?: ""
 
             val durationInt = workout.duration.toIntOrNull()
-            if (durationInt != null) {
-                binding.tvDuration.text = workout.duration.plus(" мин")
-                binding.tvDuration.visibility = View.VISIBLE
-                binding.lottieLoadingMin.visibility = View.GONE
-                binding.lottieLoadingMin.cancelAnimation()
+            tvDuration.text = if (durationInt != null) {
+                workout.duration.plus(" мин")
             } else {
-                binding.tvDuration.visibility = View.GONE
-                binding.lottieLoadingMin.visibility = View.VISIBLE
-                binding.lottieLoadingMin.playAnimation()
+                ""
             }
 
-            binding.cardView.setOnClickListener {
-                onClickPlay(workout.id)
+            cardView.setOnClickListener {
+                onClickPlay(workout.id, workout.description ?: "")
             }
         }
     }

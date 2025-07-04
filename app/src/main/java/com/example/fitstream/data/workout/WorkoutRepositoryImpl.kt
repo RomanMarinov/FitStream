@@ -1,10 +1,11 @@
 package com.example.fitstream.data.workout
 
-import android.util.Log
 import com.example.fitstream.data.api_service.ApiService
 import com.example.fitstream.data.util.Constants
 import com.example.fitstream.domain.model.workout.Workout
 import com.example.fitstream.domain.repository.WorkoutRepository
+import okio.IOException
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,9 +18,6 @@ class WorkoutRepositoryImpl @Inject constructor(
         return try {
             val response = apiService.getWorkouts()
             if (response.isSuccessful) {
-
-                Log.d("4444", " response.body()="+ response.body())
-
                 val result = response.body()?.map { it.mapToDomain( ) }
                 if (!result.isNullOrEmpty()) {
                     Result.success(result)
@@ -30,7 +28,12 @@ class WorkoutRepositoryImpl @Inject constructor(
                 Result.failure(Exception(Constants.Workout.ERROR_RESPONSE))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            val exceptionMessage = when(e) {
+                is IOException -> Constants.Workout.ERROR_NETWORK
+                is HttpException -> Constants.Workout.ERROR_FROM_SERVER.plus(e.code())
+                else -> Constants.Workout.ERROR_UNKNOWN
+            }
+            Result.failure(Exception(exceptionMessage))
         }
     }
 }

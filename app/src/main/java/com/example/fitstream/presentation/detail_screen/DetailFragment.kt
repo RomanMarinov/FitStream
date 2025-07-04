@@ -1,31 +1,36 @@
 package com.example.fitstream.presentation.detail_screen
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.ui.PlayerView
 import androidx.navigation.fragment.navArgs
 import com.example.fitstream.BuildConfig
 import com.example.fitstream.R
 import com.example.fitstream.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @UnstableApi
@@ -36,6 +41,9 @@ class DetailFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailBinding
     private val viewModel: DetailViewModel by viewModels()
+
+    private lateinit var buttonPlay: ImageButton
+    private lateinit var buttonPause: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +56,18 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeStatusBarColor()
+        Log.d("FragmentCheck", "onCreateView called")
+
+        initPlayerButtons()
+
         initUI()
     }
+
+    private fun initPlayerButtons() {
+        buttonPlay = binding.player.findViewById(R.id.exo_play)
+        buttonPause = binding.player.findViewById(R.id.exo_pause)
+    }
+
 
     @OptIn(UnstableApi::class)
     private fun initUI() {
@@ -90,6 +108,7 @@ class DetailFragment : Fragment() {
 
     @OptIn(UnstableApi::class)
     fun initPlayer(videoLink: String) {
+
         val trackSelector = DefaultTrackSelector(requireContext()).apply {
             setParameters(buildUponParameters().setMaxVideoSizeSd())
         }
@@ -105,6 +124,83 @@ class DetailFragment : Fragment() {
         exoPlayer.seekTo(viewModel.position)
         exoPlayer.playWhenReady = viewModel.playWhenReady
         binding.player.player = exoPlayer
+
+        binding.player.setControllerHideOnTouch(true)
+        binding.player.showController()
+
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                viewModel.setPlayingState(isPlaying = isPlaying)
+                if (isPlaying) {
+                    binding.btnPlay.visibility = View.GONE
+                    binding.btnPause.visibility = View.VISIBLE
+                } else {
+                    if (exoPlayer.playbackState == Player.STATE_ENDED) {
+                        binding.btnPlay.visibility = View.VISIBLE
+                        binding.btnPause.visibility = View.GONE
+                    } else {
+                        binding.btnPlay.visibility = View.VISIBLE
+                        binding.btnPause.visibility = View.GONE
+                    }
+                }
+            }
+        })
+
+        buttonPlay.setOnClickListener {
+            if (exoPlayer.playbackState == Player.STATE_ENDED) {
+                exoPlayer.seekTo(0)
+                exoPlayer.playWhenReady = true
+                exoPlayer.play()
+            } else {
+                exoPlayer.play()
+            }
+        }
+        buttonPause.setOnClickListener {
+            exoPlayer.pause()
+        }
+
+        binding.btnRewind.setOnClickListener {
+            val currentPosition = exoPlayer.currentPosition
+            val position = (currentPosition - 5000L).coerceAtLeast(0L)
+            exoPlayer.seekTo(position)
+        }
+
+        binding.btnForward.setOnClickListener {
+            val currentPosition = exoPlayer.currentPosition
+            val duration = exoPlayer.duration
+            val position = (currentPosition + 5000L).coerceAtMost(duration)
+            exoPlayer.seekTo(position)
+        }
+
+        updatePlayerLayoutForOrientation()
+
+        binding.btnPlay.setOnClickListener {
+            if (exoPlayer.playbackState == Player.STATE_ENDED) {
+                exoPlayer.seekTo(0)
+                exoPlayer.playWhenReady = true
+                exoPlayer.play()
+            } else {
+                exoPlayer.play()
+            }
+        }
+
+        binding.btnPause.setOnClickListener {
+            exoPlayer.pause()
+        }
+
+        setControllerPlayerVisibility()
+    }
+
+    private fun setControllerPlayerVisibility() {
+        binding.player.setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+            binding.btnRewind.visibility = visibility
+            binding.btnForward.visibility = visibility
+            if (viewModel.isPlaying) {
+                binding.btnPause.visibility = visibility
+            } else {
+                binding.btnPlay.visibility = visibility
+            }
+        })
     }
 
     private fun getVideWorkout() {
@@ -133,6 +229,24 @@ class DetailFragment : Fragment() {
         }
     }
 
+    private fun updatePlayerLayoutForOrientation() {
+        val orientation = resources.configuration.orientation
+        val layoutParams = binding.player.layoutParams as ConstraintLayout.LayoutParams
+
+        binding.tvDesc.text = args.desc ?: ""
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.tvDesc.visibility = View.GONE
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+            layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        } else {
+            binding.tvDesc.visibility = View.VISIBLE
+            layoutParams.height = resources.getDimensionPixelSize(R.dimen.height_portrait_player)
+            layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+        binding.player.layoutParams = layoutParams
+    }
+
     @OptIn(UnstableApi::class)
     override fun onStop() {
         super.onStop()
@@ -147,5 +261,9 @@ class DetailFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         exoPlayer.release()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 }

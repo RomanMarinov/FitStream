@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/exo_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:gravity="center_vertical"
+    android:layoutDirection="ltr"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/exo_play"
+        style="@style/ExoMediaButton.Play"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+
+    <ImageButton
+        android:id="@+id/exo_pause"
+        style="@style/ExoMediaButton.Pause"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/exo_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="10sp" />
+
+    <androidx.media3.ui.DefaultTimeBar
+        android:id="@+id/exo_progress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:played_color="@android:color/white"
+        app:unplayed_color="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/exo_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/white"
+        android:textSize="10sp" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/bt_fullscreen"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:src="@drawable/ic_baseline_fullscreen_24" />-->
+
+
+</LinearLayout>

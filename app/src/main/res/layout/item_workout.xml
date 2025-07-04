@@ -52,18 +52,6 @@
                     app:layout_constraintTop_toBottomOf="@id/tvTitle"
                     tools:text="@string/desc" />
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/lottieLoadingDesc"
-                    android:layout_width="80dp"
-                    android:layout_height="45dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-                    app:lottie_loop="true"
-                    app:lottie_rawRes="@raw/lottie_loading"
-                    app:lottie_repeatMode="restart" />
-
                 <TextView
                     android:id="@+id/tvDuration"
                     style="@style/TextAppearance.FitStream.AnotherDescription"
@@ -74,18 +62,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvDescription"
                     tools:text="@string/time" />
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/lottieLoadingMin"
-                    android:layout_width="40dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="end"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDescription"
-                    app:lottie_loop="true"
-                    app:lottie_rawRes="@raw/lottie_loading"
-                    app:lottie_repeatMode="restart" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

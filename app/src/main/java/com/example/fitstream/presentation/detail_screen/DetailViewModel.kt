@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitstream.domain.model.detail.Detail
 import com.example.fitstream.domain.repository.DetailRepository
+import com.example.fitstream.presentation.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,11 +26,14 @@ class DetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    val isPlaying: Boolean
+        get() = savedStateHandle[Constants.PlayerKeys.IS_PLAYING] ?: false
+
     val position: Long
-        get() = savedStateHandle["position"] ?: 0L
+        get() = savedStateHandle[Constants.PlayerKeys.POSITION] ?: 0L
 
     val playWhenReady: Boolean
-        get() = savedStateHandle["playWhenReady"] ?: true
+        get() = savedStateHandle[Constants.PlayerKeys.PLAY_WHEN_READY] ?: true
 
     private var _videoWorkoutUIState = MutableStateFlow<VideoUIState>(VideoUIState.Loading)
     val videoWorkoutUIState: StateFlow<VideoUIState> = _videoWorkoutUIState
@@ -47,7 +51,11 @@ class DetailViewModel @Inject constructor(
     }
 
     fun setPlaybackState(position: Long, playWhenReady: Boolean) {
-        savedStateHandle["position"] = position
-        savedStateHandle["playWhenReady"] = playWhenReady
+        savedStateHandle[Constants.PlayerKeys.POSITION] = position
+        savedStateHandle[Constants.PlayerKeys.PLAY_WHEN_READY] = playWhenReady
+    }
+
+    fun setPlayingState(isPlaying: Boolean) {
+        savedStateHandle[Constants.PlayerKeys.IS_PLAYING] = isPlaying
     }
 }

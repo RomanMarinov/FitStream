@@ -4,6 +4,7 @@
     <string name="search_name">Поиск по названию</string>
     <string name="title">Заголовок</string>
     <string name="desc">Описание</string>
+    <string name="not_found">Ничего не найдено</string>
     <string name="time">время</string>
     <string name="try_again">Попробовать еще раз</string>
     <string name="empty_list">Список пуст</string>
