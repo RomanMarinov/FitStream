@@ -1,4 +1,4 @@
-package com.example.fitstream.data.workout.remote.dto
+package com.example.fitstream.data.detail.remote.dto
 
 import com.example.fitstream.domain.model.detail.Detail
 import com.google.gson.annotations.SerializedName

@@ -1,18 +1,15 @@
 package com.example.fitstream.presentation.splash_screen
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.fitstream.R
 import com.example.fitstream.databinding.FragmentSplashBinding
-import com.example.fitstream.presentation.workout_screen.WorkoutFragmentDirections
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

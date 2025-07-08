@@ -3,14 +3,11 @@ package com.example.fitstream.presentation.detail_screen
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController
-import android.widget.ImageButton
 import android.widget.Toast
-import androidx.annotation.OptIn
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -20,30 +17,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.PlayerView
 import androidx.navigation.fragment.navArgs
-import com.example.fitstream.BuildConfig
 import com.example.fitstream.R
 import com.example.fitstream.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @UnstableApi
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
-    private lateinit var exoPlayer: ExoPlayer
-    private val args: DetailFragmentArgs by navArgs()
+    @Inject
+    lateinit var exoPlayerFacade: ExoPlayerFacade
 
+    private val args: DetailFragmentArgs by navArgs()
     private lateinit var binding: FragmentDetailBinding
     private val viewModel: DetailViewModel by viewModels()
-
-    private lateinit var buttonPlay: ImageButton
-    private lateinit var buttonPause: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,139 +48,99 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeStatusBarColor()
-        Log.d("FragmentCheck", "onCreateView called")
-
-        initPlayerButtons()
-
         initUI()
     }
 
-    private fun initPlayerButtons() {
-        buttonPlay = binding.player.findViewById(R.id.exo_play)
-        buttonPause = binding.player.findViewById(R.id.exo_pause)
-    }
-
-
-    @OptIn(UnstableApi::class)
     private fun initUI() {
-        getVideWorkout()
+        getVideoWorkout()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.videoWorkoutUIState.collect { videoWorkoutUIState ->
                     when (videoWorkoutUIState) {
-                        VideoUIState.Empty -> {
-                            binding.btVideoTryAgain.visibility = View.VISIBLE
-                            showToast(message = getString(R.string.no_data_try_again))
-                        }
-
-                        is VideoUIState.Error -> {
-                            binding.btVideoTryAgain.visibility = View.VISIBLE
-                            showToast(message = getString(R.string.error_try_again))
-                        }
-
-                        VideoUIState.Loading -> {
-                            binding.btVideoTryAgain.visibility = View.GONE
-                        }
-
-                        is VideoUIState.Success -> {
-                            binding.btVideoTryAgain.visibility = View.GONE
-                            val videoLink = videoWorkoutUIState.workoutVideo.link
-                            initPlayer(videoLink = videoLink)
-                        }
+                        VideoUIState.Empty -> setVideoUIStateEmpty()
+                        is VideoUIState.Error -> setVideoUIStateError()
+                        VideoUIState.Loading -> setVideoUIStateLoading()
+                        is VideoUIState.Success -> setVideoUIStateSuccess(videoWorkoutUIState = videoWorkoutUIState)
                     }
                 }
             }
         }
 
         binding.btVideoTryAgain.setOnClickListener {
-            getVideWorkout()
+            getVideoWorkout()
         }
     }
 
-    @OptIn(UnstableApi::class)
-    fun initPlayer(videoLink: String) {
+    private fun setVideoUIStateEmpty() {
+        binding.btVideoTryAgain.visibility = View.VISIBLE
+        showToast(message = getString(R.string.no_data_try_again))
+    }
 
-        val trackSelector = DefaultTrackSelector(requireContext()).apply {
-            setParameters(buildUponParameters().setMaxVideoSizeSd())
-        }
+    private fun setVideoUIStateError() {
+        binding.btVideoTryAgain.visibility = View.VISIBLE
+        showToast(message = getString(R.string.error_try_again))
+    }
 
-        exoPlayer = ExoPlayer
-            .Builder(requireContext())
-            .setTrackSelector(trackSelector)
-            .build()
-        val videoUri = BuildConfig.BASE_URL.plus(videoLink)
-        val mediaItem = MediaItem.fromUri(videoUri)
-        exoPlayer.setMediaItem(mediaItem)
-        exoPlayer.prepare()
-        exoPlayer.seekTo(viewModel.position)
-        exoPlayer.playWhenReady = viewModel.playWhenReady
+    private fun setVideoUIStateLoading() {
+        binding.btVideoTryAgain.visibility = View.GONE
+    }
+
+    private fun setVideoUIStateSuccess(videoWorkoutUIState: VideoUIState.Success) {
+        binding.btVideoTryAgain.visibility = View.GONE
+        val videoLink = videoWorkoutUIState.workoutVideo.link
+        initPlayer(videoLink = videoLink)
+    }
+
+    private fun initPlayer(videoLink: String) {
+        setExoPlayer(videoLink = videoLink)
+        setObserverExoPlayer()
+        setButtonsClickListener()
+        setControllerPlayerVisibility()
+    }
+
+    private fun setExoPlayer(videoLink: String) {
+        val exoPlayer = exoPlayerFacade.initExoPlayer(
+            videoLink = videoLink,
+            position = viewModel.position,
+            playWhenReady = viewModel.playWhenReady
+        )
         binding.player.player = exoPlayer
-
         binding.player.setControllerHideOnTouch(true)
         binding.player.showController()
+    }
 
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                viewModel.setPlayingState(isPlaying = isPlaying)
-                if (isPlaying) {
-                    binding.btnPlay.visibility = View.GONE
-                    binding.btnPause.visibility = View.VISIBLE
-                } else {
-                    if (exoPlayer.playbackState == Player.STATE_ENDED) {
-                        binding.btnPlay.visibility = View.VISIBLE
-                        binding.btnPause.visibility = View.GONE
-                    } else {
-                        binding.btnPlay.visibility = View.VISIBLE
-                        binding.btnPause.visibility = View.GONE
-                    }
-                }
-            }
-        })
-
-        buttonPlay.setOnClickListener {
-            if (exoPlayer.playbackState == Player.STATE_ENDED) {
-                exoPlayer.seekTo(0)
-                exoPlayer.playWhenReady = true
-                exoPlayer.play()
-            } else {
-                exoPlayer.play()
-            }
+    private fun setObserverExoPlayer() {
+        exoPlayerFacade.isPlaying.observe(viewLifecycleOwner) { isPlaying ->
+            viewModel.setPlayingState(isPlaying = isPlaying)
+            updatePlayPauseUI(isPlaying, exoPlayerFacade.getPlaybackState())
         }
-        buttonPause.setOnClickListener {
-            exoPlayer.pause()
-        }
+    }
 
+    private fun setButtonsClickListener() {
         binding.btnRewind.setOnClickListener {
-            val currentPosition = exoPlayer.currentPosition
-            val position = (currentPosition - 5000L).coerceAtLeast(0L)
-            exoPlayer.seekTo(position)
+            exoPlayerFacade.rewind()
         }
 
         binding.btnForward.setOnClickListener {
-            val currentPosition = exoPlayer.currentPosition
-            val duration = exoPlayer.duration
-            val position = (currentPosition + 5000L).coerceAtMost(duration)
-            exoPlayer.seekTo(position)
+            exoPlayerFacade.forward()
         }
 
         updatePlayerLayoutForOrientation()
 
         binding.btnPlay.setOnClickListener {
-            if (exoPlayer.playbackState == Player.STATE_ENDED) {
-                exoPlayer.seekTo(0)
-                exoPlayer.playWhenReady = true
-                exoPlayer.play()
-            } else {
-                exoPlayer.play()
-            }
+            exoPlayerFacade.playOrRestartIfEnd()
         }
 
         binding.btnPause.setOnClickListener {
-            exoPlayer.pause()
+            exoPlayerFacade.pause()
         }
+    }
 
-        setControllerPlayerVisibility()
+    private fun updatePlayPauseUI(isPlaying: Boolean, playbackState: Int) {
+        val shouldShowPlay = playbackState == Player.STATE_ENDED || !isPlaying
+        binding.btnPlay.visibility = if (shouldShowPlay) View.VISIBLE else View.GONE
+        binding.btnPause.visibility = if (shouldShowPlay) View.GONE else View.VISIBLE
     }
 
     private fun setControllerPlayerVisibility() {
@@ -203,8 +155,8 @@ class DetailFragment : Fragment() {
         })
     }
 
-    private fun getVideWorkout() {
-        viewModel.getVideWorkout(id = args.id)
+    private fun getVideoWorkout() {
+        viewModel.getVideoWorkout(id = args.id)
     }
 
     private fun showToast(message: String) {
@@ -216,14 +168,14 @@ class DetailFragment : Fragment() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+            window.statusBarColor = ContextCompat.getColor(requireContext(), android.R.color.black)
             window.insetsController?.setSystemBarsAppearance(
                 0,
                 WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
             )
         } else {
             @Suppress("DEPRECATION")
-            window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+            window.statusBarColor = ContextCompat.getColor(requireContext(), android.R.color.black)
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = 0
         }
@@ -247,23 +199,16 @@ class DetailFragment : Fragment() {
         binding.player.layoutParams = layoutParams
     }
 
-    @OptIn(UnstableApi::class)
     override fun onStop() {
         super.onStop()
-        viewModel.setPlaybackState(
-            position = exoPlayer.currentPosition,
-            playWhenReady = exoPlayer.playWhenReady
-        )
-        exoPlayer.pause()
+        val currentPlayback = exoPlayerFacade.getCurrentPlayBack()
+        viewModel.setCurrentPlayback(currentPlayback)
+        exoPlayerFacade.pause()
     }
 
-    @UnstableApi
     override fun onDestroy() {
         super.onDestroy()
-        exoPlayer.release()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+        exoPlayerFacade.releasePlayer()
+        binding.unbind()
     }
 }

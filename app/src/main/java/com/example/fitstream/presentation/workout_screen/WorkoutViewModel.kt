@@ -61,7 +61,8 @@ class WorkoutViewModel @Inject constructor(
                     _workoutsState.value = WorkoutUiState.Empty
                 }
             }.onFailure { error ->
-                _workoutsState.value = WorkoutUiState.Error(error.message ?: Constants.GetWorkoutResponse.ERROR)
+                _workoutsState.value =
+                    WorkoutUiState.Error(error.message ?: Constants.GetWorkoutResponse.ERROR)
             }
         }
     }

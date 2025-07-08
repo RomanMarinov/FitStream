@@ -9,18 +9,18 @@
     android:layoutDirection="ltr"
     android:orientation="horizontal">
 
-    <ImageButton
-        android:id="@+id/exo_play"
-        style="@style/ExoMediaButton.Play"
-        android:layout_width="60dp"
-        android:layout_height="60dp" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/exo_play"-->
+<!--        style="@style/ExoMediaButton.Play"-->
+<!--        android:layout_width="60dp"-->
+<!--        android:layout_height="60dp" />-->
 
-    <ImageButton
-        android:id="@+id/exo_pause"
-        style="@style/ExoMediaButton.Pause"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:visibility="gone" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/exo_pause"-->
+<!--        style="@style/ExoMediaButton.Pause"-->
+<!--        android:layout_width="60dp"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:visibility="gone" />-->
 
     <TextView
         android:id="@+id/exo_position"

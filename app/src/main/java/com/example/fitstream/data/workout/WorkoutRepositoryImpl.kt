@@ -18,7 +18,7 @@ class WorkoutRepositoryImpl @Inject constructor(
         return try {
             val response = apiService.getWorkouts()
             if (response.isSuccessful) {
-                val result = response.body()?.map { it.mapToDomain( ) }
+                val result = response.body()?.map { it.mapToDomain() }
                 if (!result.isNullOrEmpty()) {
                     Result.success(result)
                 } else {
@@ -28,7 +28,7 @@ class WorkoutRepositoryImpl @Inject constructor(
                 Result.failure(Exception(Constants.Workout.ERROR_RESPONSE))
             }
         } catch (e: Exception) {
-            val exceptionMessage = when(e) {
+            val exceptionMessage = when (e) {
                 is IOException -> Constants.Workout.ERROR_NETWORK
                 is HttpException -> Constants.Workout.ERROR_FROM_SERVER.plus(e.code())
                 else -> Constants.Workout.ERROR_UNKNOWN

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fitstream.R
 import com.example.fitstream.databinding.ItemWorkoutBinding
 import com.example.fitstream.domain.model.workout.Workout
 
@@ -31,7 +32,7 @@ class WorkoutsAdapter(
 
             val durationInt = workout.duration.toIntOrNull()
             tvDuration.text = if (durationInt != null) {
-                workout.duration.plus(" мин")
+                root.context.getString(R.string.minutes_format, workout.duration)
             } else {
                 ""
             }
@@ -48,7 +49,7 @@ class DetailDiffUtilCallback : DiffUtil.ItemCallback<Workout>() {
         oldItem: Workout,
         newItem: Workout
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(

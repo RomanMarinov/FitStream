@@ -1,6 +1,6 @@
 package com.example.fitstream.data.api_service
 
-import com.example.fitstream.data.workout.remote.dto.DetailDTO
+import com.example.fitstream.data.detail.remote.dto.DetailDTO
 import com.example.fitstream.data.workout.remote.dto.WorkoutDTO
 import retrofit2.Response
 import retrofit2.http.GET
