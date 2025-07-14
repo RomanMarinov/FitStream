@@ -1,6 +1,5 @@
 package com.example.fitstream.presentation.detail_screen
 
-import android.content.Context
 import androidx.annotation.OptIn
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,8 +9,8 @@ import com.example.fitstream.R
 import com.example.fitstream.domain.model.detail.Detail
 import com.example.fitstream.domain.repository.DetailRepository
 import com.example.fitstream.presentation.util.Constants
+import com.example.fitstream.utils.resource.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +30,7 @@ class DetailViewModel @OptIn(UnstableApi::class)
 @Inject constructor(
     private val detailRepository: DetailRepository,
     private val savedStateHandle: SavedStateHandle,
-    @ApplicationContext private val context: Context
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     val isPlaying: Boolean
@@ -53,7 +52,9 @@ class DetailViewModel @OptIn(UnstableApi::class)
                 _videoWorkoutUIState.value = VideoUIState.Success(videoWorkout)
             }.onFailure { error ->
                 _videoWorkoutUIState.value =
-                    VideoUIState.Error(error.message ?: context.getString(R.string.error_download_video))
+                    VideoUIState.Error(
+                        error.message ?: resourceProvider.getResourceString(R.string.error_download_video)
+                    )
             }
         }
     }
