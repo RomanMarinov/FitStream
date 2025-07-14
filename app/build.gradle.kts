@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.dagger.hilt)
-    id("kotlin-kapt")
+    id("kotlin-android")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    id("org.jetbrains.kotlin.kapt")
+
 }
 
 android {
@@ -73,12 +74,20 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    // di
-    implementation(libs.hilt.android)
+    implementation(libs.kotlin.stdlib)
+
+    // legacy support
     implementation(libs.androidx.legacy.support.v4)
+
+    // viewmodel livedata
     implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // fragment extension
     implementation(libs.androidx.fragment.ktx)
-    kapt(libs.hilt.compiler)
+
+    // Dagger core
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
     // test
     testImplementation(libs.junit)

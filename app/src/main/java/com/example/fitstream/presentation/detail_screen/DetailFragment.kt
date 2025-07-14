@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController
 import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -21,21 +22,33 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
 import androidx.navigation.fragment.navArgs
+import com.example.fitstream.App
 import com.example.fitstream.R
 import com.example.fitstream.databinding.FragmentDetailBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.fitstream.di.factory.detail_viewmodel.DetailViewModelFactoryProvider
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@UnstableApi
-@AndroidEntryPoint
 class DetailFragment : Fragment() {
+
+    @UnstableApi
     @Inject
     lateinit var exoPlayerFacade: ExoPlayerFacade
 
     private val args: DetailFragmentArgs by navArgs()
     private lateinit var binding: FragmentDetailBinding
-    private val viewModel: DetailViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactoryProvider: DetailViewModelFactoryProvider
+    private val viewModel: DetailViewModel by viewModels {
+        viewModelFactoryProvider
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App)
+            .appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,6 +112,7 @@ class DetailFragment : Fragment() {
         setControllerPlayerVisibility()
     }
 
+    @OptIn(UnstableApi::class)
     private fun setExoPlayer(videoLink: String) {
         val exoPlayer = exoPlayerFacade.initExoPlayer(
             videoLink = videoLink,

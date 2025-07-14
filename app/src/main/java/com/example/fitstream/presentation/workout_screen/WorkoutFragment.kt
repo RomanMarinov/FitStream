@@ -1,11 +1,9 @@
 package com.example.fitstream.presentation.workout_screen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,25 +15,38 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.fitstream.App
 import com.example.fitstream.R
 import com.example.fitstream.databinding.FragmentWorkoutBinding
+import com.example.fitstream.di.factory.workout_viewmodel.WorkoutViewModelFactoryProvider
 import com.example.fitstream.domain.model.workout.WorkoutType
 import com.google.android.material.color.MaterialColors.isColorLight
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class WorkoutFragment : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
-    private val viewModel: WorkoutViewModel by viewModels()
 
     private lateinit var arrayAdapter: ArrayAdapter<String>
+
+    @Inject
+    lateinit var viewModelFactoryProvider: WorkoutViewModelFactoryProvider
+    private val viewModel: WorkoutViewModel by viewModels {
+        viewModelFactoryProvider
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +62,7 @@ class WorkoutFragment : Fragment() {
         initUI()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initUI() {
         setFilterInputLayout()
         val workoutAdapter = WorkoutsAdapter(onClickPlay = { workoutId, workoutDesc ->
@@ -89,6 +101,11 @@ class WorkoutFragment : Fragment() {
             binding.searchTitle.setText("")
         }
 
+        binding.filterDropdown.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                hideKeyBoard(view = binding.filterDropdown)
+            }
+        }
 
         binding.searchTitle.addTextChangedListener { text ->
             val textQuery = text.toString().trim()
@@ -100,15 +117,19 @@ class WorkoutFragment : Fragment() {
 
         binding.searchTitle.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val imm =
-                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.searchTitle.windowToken, 0)
+                hideKeyBoard(view = binding.searchTitle)
                 binding.searchTitle.clearFocus()
                 true
             } else {
                 false
             }
         }
+    }
+
+    private fun hideKeyBoard(view: View) {
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun setEmptyState() = with(binding) {

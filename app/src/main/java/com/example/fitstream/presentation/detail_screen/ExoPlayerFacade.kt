@@ -1,6 +1,7 @@
 package com.example.fitstream.presentation.detail_screen
 
 import android.content.Context
+import androidx.annotation.OptIn
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaItem
@@ -9,13 +10,11 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.example.fitstream.BuildConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-@UnstableApi
 class ExoPlayerFacade @Inject constructor(
-    @ApplicationContext val context: Context
+    private val context: Context
 ) {
     private lateinit var exoPlayer: ExoPlayer
 
@@ -29,6 +28,7 @@ class ExoPlayerFacade @Inject constructor(
         }
     }
 
+    @OptIn(UnstableApi::class)
     fun initExoPlayer(videoLink: String, position: Long, playWhenReady: Boolean): ExoPlayer {
         if (this::exoPlayer.isInitialized) {
             return exoPlayer
@@ -73,7 +73,7 @@ class ExoPlayerFacade @Inject constructor(
         }
     }
 
-    fun play() {
+    private fun play() {
         exoPlayer.play()
     }
 

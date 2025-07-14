@@ -1,22 +1,19 @@
 package com.example.fitstream.presentation.detail_screen
 
 import android.content.Context
-import androidx.annotation.OptIn
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.UnstableApi
 import com.example.fitstream.R
 import com.example.fitstream.domain.model.detail.Detail
 import com.example.fitstream.domain.repository.DetailRepository
 import com.example.fitstream.presentation.util.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.assisted.AssistedInject
+import dagger.assisted.Assisted
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 sealed class VideoUIState {
     data class Success(val workoutVideo: Detail) : VideoUIState()
@@ -25,13 +22,10 @@ sealed class VideoUIState {
     data object Loading : VideoUIState()
 }
 
-@OptIn(UnstableApi::class)
-@HiltViewModel
-class DetailViewModel @OptIn(UnstableApi::class)
-@Inject constructor(
+class DetailViewModel @AssistedInject constructor(
     private val detailRepository: DetailRepository,
-    private val savedStateHandle: SavedStateHandle,
-    @ApplicationContext private val context: Context
+    @Assisted private val savedStateHandle: SavedStateHandle,
+    @Assisted private val context: Context
 ) : ViewModel() {
 
     val isPlaying: Boolean

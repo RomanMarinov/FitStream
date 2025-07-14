@@ -2,8 +2,6 @@ package com.example.fitstream.di
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,8 +12,23 @@ import com.example.fitstream.BuildConfig
 import com.example.fitstream.data.api_service.ApiService
 
 @Module
-@InstallIn(SingletonComponent::class)
 class NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideLogging(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttp(
+        logging: HttpLoggingInterceptor,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .connectTimeout(100, TimeUnit.SECONDS)
+        .readTimeout(100, TimeUnit.SECONDS)
+        .build()
 
     @Provides
     @Singleton
@@ -33,22 +46,6 @@ class NetworkModule {
             )
             .build()
     }
-
-    @Provides
-    @Singleton
-    fun provideLogging(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
-
-    @Provides
-    @Singleton
-    fun provideOkHttp(
-        logging: HttpLoggingInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .connectTimeout(100, TimeUnit.SECONDS)
-        .readTimeout(100, TimeUnit.SECONDS)
-        .build()
 
     @Provides
     @Singleton

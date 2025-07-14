@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitstream.domain.model.workout.Workout
 import com.example.fitstream.domain.model.workout.WorkoutType
-import com.example.fitstream.domain.repository.WorkoutRepository
 import com.example.fitstream.presentation.util.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import com.example.fitstream.domain.repository.WorkoutRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
 sealed class WorkoutUiState {
     data object Loading : WorkoutUiState()
@@ -23,10 +23,9 @@ sealed class WorkoutUiState {
     data object Empty : WorkoutUiState()
 }
 
-@HiltViewModel
-class WorkoutViewModel @Inject constructor(
+class WorkoutViewModel @AssistedInject constructor(
     private val workoutRepository: WorkoutRepository,
-    private val savedStateHandle: SavedStateHandle
+    @Assisted private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _workoutsState = MutableStateFlow<WorkoutUiState>(WorkoutUiState.Loading)
     val workoutsState: StateFlow<WorkoutUiState> = _workoutsState
