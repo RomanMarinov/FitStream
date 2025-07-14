@@ -97,6 +97,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.androidx.lifecycle.runtime.testing)
+    androidTestImplementation("io.mockk:mockk-android:1.13.9")
 
     // lifecycle viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
