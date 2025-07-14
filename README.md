@@ -17,7 +17,6 @@ Kotlin, Android XML
 - dagger hilt / dagger, <br/>
 - stateFlow, <br/>
 - coroutine, <br/>
-- singleLiveEvent, <br/>
 - databinding, <br/>
 - animation, <br/>
 - toast, <br/>
