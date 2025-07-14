@@ -26,7 +26,11 @@ Kotlin, Android XML
 - exoplayer <br/>
 
 ## Демонстрация  
-<video src="https://github.com/user-attachments/assets/202f3a6e-0047-4228-ad20-b2c5d0a76a94"></video> 
+<video src="https://github.com/user-attachments/assets/e46d2e50-5452-4ec3-8784-0345cd54fc31"></video> 
+
+
+
+
 
 
 
