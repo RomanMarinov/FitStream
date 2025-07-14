@@ -14,8 +14,8 @@ Kotlin, Android XML
 
 - clean architecture, <br/>
 - mvvm, <br/>
-- dagger hilt, <br/>
-- sharedFlow, <br/>
+- dagger hilt / dagger, <br/>
+- stateFlow, <br/>
 - coroutine, <br/>
 - singleLiveEvent, <br/>
 - databinding, <br/>
@@ -23,6 +23,7 @@ Kotlin, Android XML
 - toast, <br/>
 - retrofit, <br/>
 - lottie animation <br/>
+- exoplayer <br/>
 
 ## Демонстрация  
 <video src="https://github.com/user-attachments/assets/202f3a6e-0047-4228-ad20-b2c5d0a76a94"></video> 
