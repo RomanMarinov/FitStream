@@ -72,7 +72,7 @@ class DetailFragment : Fragment() {
                 viewModel.videoWorkoutUIState.collect { videoWorkoutUIState ->
                     when (videoWorkoutUIState) {
                         VideoUIState.Empty -> setVideoUIStateEmpty()
-                        is VideoUIState.Error -> setVideoUIStateError()
+                        is VideoUIState.Error -> setVideoUIStateError(videoWorkoutUIState = videoWorkoutUIState)
                         VideoUIState.Loading -> setVideoUIStateLoading()
                         is VideoUIState.Success -> setVideoUIStateSuccess(videoWorkoutUIState = videoWorkoutUIState)
                     }
@@ -90,8 +90,10 @@ class DetailFragment : Fragment() {
         showToast(message = getString(R.string.no_data_try_again))
     }
 
-    private fun setVideoUIStateError() {
+    private fun setVideoUIStateError(videoWorkoutUIState: VideoUIState.Error) {
         binding.btVideoTryAgain.visibility = View.VISIBLE
+
+
         showToast(message = getString(R.string.error_try_again))
     }
 

@@ -9,11 +9,10 @@ import javax.inject.Inject
 
 class DetailViewModelFactoryProvider @Inject constructor(
     private val factory: DetailViewModelFactory,
-    private val context: Context
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val handle = extras.createSavedStateHandle()
-        return factory.create(handle, context) as T
+        return factory.create(handle) as T
     }
 }

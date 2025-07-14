@@ -99,6 +99,8 @@ dependencies {
     testImplementation(libs.androidx.lifecycle.runtime.testing)
     androidTestImplementation("io.mockk:mockk-android:1.13.9")
 
+    testImplementation("junit:junit:4.13.2")
+
     // lifecycle viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 

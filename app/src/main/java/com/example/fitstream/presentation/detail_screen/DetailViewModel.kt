@@ -1,6 +1,5 @@
 package com.example.fitstream.presentation.detail_screen
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +7,9 @@ import com.example.fitstream.R
 import com.example.fitstream.domain.model.detail.Detail
 import com.example.fitstream.domain.repository.DetailRepository
 import com.example.fitstream.presentation.util.Constants
-import dagger.assisted.AssistedInject
+import com.example.fitstream.utils.resource.ResourceProvider
 import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,8 +24,8 @@ sealed class VideoUIState {
 
 class DetailViewModel @AssistedInject constructor(
     private val detailRepository: DetailRepository,
+    private val resourceProvider: ResourceProvider,
     @Assisted private val savedStateHandle: SavedStateHandle,
-    @Assisted private val context: Context
 ) : ViewModel() {
 
     val isPlaying: Boolean
@@ -47,7 +47,7 @@ class DetailViewModel @AssistedInject constructor(
                 _videoWorkoutUIState.value = VideoUIState.Success(videoWorkout)
             }.onFailure { error ->
                 _videoWorkoutUIState.value =
-                    VideoUIState.Error(error.message ?: context.getString(R.string.error_download_video))
+                    VideoUIState.Error(error.message ?: resourceProvider.getResourceString(R.string.error_download_video))
             }
         }
     }
