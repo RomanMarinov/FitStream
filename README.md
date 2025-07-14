@@ -27,6 +27,7 @@ Kotlin, Android XML
 
 ## Демонстрация  
 <video src="https://github.com/user-attachments/assets/e46d2e50-5452-4ec3-8784-0345cd54fc31"></video> 
+<video src="https://github.com/user-attachments/assets/c82aa779-7c4f-48c8-b84f-603ac13f13d6"></video>  
 
 
 
