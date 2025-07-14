@@ -19,6 +19,7 @@ Kotlin, Android XML
 - coroutine, <br/>
 - databinding, <br/>
 - animation, <br/>
+- navigation, <br/>
 - toast, <br/>
 - retrofit, <br/>
 - lottie animation <br/>
