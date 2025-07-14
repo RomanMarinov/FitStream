@@ -89,6 +89,11 @@ class WorkoutFragment : Fragment() {
             binding.searchTitle.setText("")
         }
 
+        binding.filterDropdown.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                hideKeyBoard(view = binding.filterDropdown)
+            }
+        }
 
         binding.searchTitle.addTextChangedListener { text ->
             val textQuery = text.toString().trim()
@@ -100,9 +105,7 @@ class WorkoutFragment : Fragment() {
 
         binding.searchTitle.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val imm =
-                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.searchTitle.windowToken, 0)
+                hideKeyBoard(view = binding.searchTitle)
                 binding.searchTitle.clearFocus()
                 true
             } else {
@@ -217,4 +220,11 @@ class WorkoutFragment : Fragment() {
             window.decorView.systemUiVisibility = 0
         }
     }
+
+    private fun hideKeyBoard(view: View) {
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 }
