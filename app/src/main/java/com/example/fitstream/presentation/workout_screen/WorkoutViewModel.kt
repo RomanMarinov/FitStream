@@ -80,6 +80,30 @@ class WorkoutViewModel @AssistedInject constructor(
         }
     }
 
+
+    private fun setWorkoutsStateSuccess(workouts: List<Workout>) {
+        val resolvedWorkouts = when {
+            workoutsSavedByTitle.isNotEmpty() -> workoutsSavedByTitle
+            textQuerySaved.isNotEmpty() -> workoutsSavedByTitle
+            workoutsSaved.isNotEmpty() -> workoutsSaved
+            else -> workouts
+        }
+
+        _workoutsState.value = WorkoutUiState.Success(
+            workouts = resolvedWorkouts,
+            workoutsType = getSortedWorkoutType()
+        )
+    }
+
+    private fun getSortedWorkoutType(): List<WorkoutType> {
+        val workoutsType = _baseWorkouts
+            .map { it.type }
+            .distinct()
+            .sorted()
+            .plus(WorkoutType.ALL)
+        return workoutsType
+    }
+
     fun filteringWorkoutsByTitle(textQuery: String) {
         savedStateHandle[Constants.WorkoutKeys.TEXT_QUERY] = textQuery
         val filteringWorkoutsByTitle: List<Workout> = workoutsSaved.filter {
@@ -106,26 +130,6 @@ class WorkoutViewModel @AssistedInject constructor(
         }
     }
 
-    private fun setWorkoutsStateSuccess(workouts: List<Workout>) {
-        val resolvedWorkouts = when {
-            workoutsSavedByTitle.isNotEmpty() -> workoutsSavedByTitle
-            textQuerySaved.isNotEmpty() -> workoutsSavedByTitle
-            workoutsSaved.isNotEmpty() -> workoutsSaved
-            else -> workouts
-        }
 
-        _workoutsState.value = WorkoutUiState.Success(
-            workouts = resolvedWorkouts,
-            workoutsType = getSortedWorkoutType()
-        )
-    }
 
-    private fun getSortedWorkoutType(): List<WorkoutType> {
-        val workoutsType = _baseWorkouts
-            .map { it.type }
-            .distinct()
-            .sorted()
-            .plus(WorkoutType.ALL)
-        return workoutsType
-    }
 }

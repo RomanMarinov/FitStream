@@ -98,7 +98,7 @@ dependencies {
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.androidx.lifecycle.runtime.testing)
     androidTestImplementation("io.mockk:mockk-android:1.13.9")
-
+    testImplementation(kotlin("test"))
     testImplementation("junit:junit:4.13.2")
 
     // lifecycle viewmodel
@@ -113,4 +113,5 @@ dependencies {
     // navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
 }
