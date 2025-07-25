@@ -48,12 +48,14 @@ class WorkoutViewModel @AssistedInject constructor(
         getWorkouts()
     }
 
+    // протестировал
     fun getWorkouts() {
         viewModelScope.launch(Dispatchers.IO) {
             _workoutsState.value = WorkoutUiState.Loading
             val result = workoutRepository.getWorkouts()
             result.onSuccess { workouts ->
                 if (workouts.isNotEmpty()) {
+                    _baseWorkouts.clear()
                     _baseWorkouts.addAll(workouts)
                     setWorkoutsStateSuccess(workouts = workouts)
                 } else {
@@ -65,7 +67,7 @@ class WorkoutViewModel @AssistedInject constructor(
             }
         }
     }
-
+    // протестировал
     fun filteringWorkoutsByType(selectedType: String) {
         savedStateHandle[Constants.WorkoutKeys.SELECTED_TYPE] = selectedType
         val alreadyDescription = _baseWorkouts.any { it.type.description == selectedType }
@@ -80,6 +82,25 @@ class WorkoutViewModel @AssistedInject constructor(
         }
     }
 
+    fun filteringWorkoutsByTitle(textQuery: String) {
+        savedStateHandle[Constants.WorkoutKeys.TEXT_QUERY] = textQuery
+        val filteringWorkoutsByTitle: List<Workout> = workoutsSaved.filter {
+            it.title.contains(
+                textQuery,
+                ignoreCase = true
+            )
+        }
+        savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] = filteringWorkoutsByTitle
+
+        val workoutsStart = if (textQuery.isEmpty()) {
+            savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] = emptyList<Workout>()
+            workoutsSaved
+        } else {
+            filteringWorkoutsByTitle
+        }
+
+        setWorkoutsStateSuccess(workouts = workoutsStart)
+    }
 
     private fun setWorkoutsStateSuccess(workouts: List<Workout>) {
         val resolvedWorkouts = when {
@@ -95,6 +116,7 @@ class WorkoutViewModel @AssistedInject constructor(
         )
     }
 
+    // протестировал
     private fun getSortedWorkoutType(): List<WorkoutType> {
         val workoutsType = _baseWorkouts
             .map { it.type }
@@ -104,32 +126,10 @@ class WorkoutViewModel @AssistedInject constructor(
         return workoutsType
     }
 
-    fun filteringWorkoutsByTitle(textQuery: String) {
-        savedStateHandle[Constants.WorkoutKeys.TEXT_QUERY] = textQuery
-        val filteringWorkoutsByTitle: List<Workout> = workoutsSaved.filter {
-            it.title.contains(
-                textQuery,
-                ignoreCase = true
-            )
-        }
-
-        savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] = filteringWorkoutsByTitle
-        val workoutsStart = if (textQuery.isEmpty()) {
-            savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] = emptyList<Workout>()
-            workoutsSaved
-        } else {
-            filteringWorkoutsByTitle
-        }
-
-        setWorkoutsStateSuccess(workouts = workoutsStart)
-    }
-
+    // протестировал
     fun setWorkoutsState(workouts: List<Workout>) {
         if (workoutsSavedByTitle.isEmpty() && textQuerySaved.isEmpty()) {
             savedStateHandle[Constants.WorkoutKeys.WORKOUTS] = workouts
         }
     }
-
-
-
 }
