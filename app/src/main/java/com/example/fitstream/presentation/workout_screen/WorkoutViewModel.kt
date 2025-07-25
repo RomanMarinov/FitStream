@@ -48,7 +48,6 @@ class WorkoutViewModel @AssistedInject constructor(
         getWorkouts()
     }
 
-    // протестировал
     fun getWorkouts() {
         viewModelScope.launch(Dispatchers.IO) {
             _workoutsState.value = WorkoutUiState.Loading
@@ -67,7 +66,7 @@ class WorkoutViewModel @AssistedInject constructor(
             }
         }
     }
-    // протестировал
+
     fun filteringWorkoutsByType(selectedType: String) {
         savedStateHandle[Constants.WorkoutKeys.SELECTED_TYPE] = selectedType
         val alreadyDescription = _baseWorkouts.any { it.type.description == selectedType }
@@ -116,7 +115,6 @@ class WorkoutViewModel @AssistedInject constructor(
         )
     }
 
-    // протестировал
     private fun getSortedWorkoutType(): List<WorkoutType> {
         val workoutsType = _baseWorkouts
             .map { it.type }
@@ -126,7 +124,6 @@ class WorkoutViewModel @AssistedInject constructor(
         return workoutsType
     }
 
-    // протестировал
     fun setWorkoutsState(workouts: List<Workout>) {
         if (workoutsSavedByTitle.isEmpty() && textQuerySaved.isEmpty()) {
             savedStateHandle[Constants.WorkoutKeys.WORKOUTS] = workouts
