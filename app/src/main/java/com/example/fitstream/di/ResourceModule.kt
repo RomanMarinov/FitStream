@@ -10,5 +10,5 @@ import javax.inject.Singleton
 interface ResourceModule {
     @Singleton
     @Binds
-    fun bindsResource(androidResourceProvider: AndroidResourceProvider) : ResourceProvider
+    fun bindsResource(androidResourceProvider: AndroidResourceProvider): ResourceProvider
 }

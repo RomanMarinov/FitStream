@@ -118,11 +118,12 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `should return default value for empty exception` () = runTest {
+    fun `should return default value for empty exception`() = runTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns dispatcher
 
-        val messageException = Exception(com.example.fitstream.data.util.Constants.Detail.EMPTY_RESPONSE)
+        val messageException =
+            Exception(com.example.fitstream.data.util.Constants.Detail.EMPTY_RESPONSE)
         coEvery { detailRepository.getVideoWorkout(1) } returns Result.failure(messageException)
 
         viewModel.getVideoWorkout(1)
@@ -140,7 +141,8 @@ class DetailViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns dispatcher
 
-        val messageException = Exception(com.example.fitstream.data.util.Constants.Detail.ERROR_RESPONSE)
+        val messageException =
+            Exception(com.example.fitstream.data.util.Constants.Detail.ERROR_RESPONSE)
         coEvery { detailRepository.getVideoWorkout(1) } returns Result.failure(messageException)
 
         viewModel.getVideoWorkout(1)

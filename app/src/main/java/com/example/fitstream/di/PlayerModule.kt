@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class PlayerModule(private val context: Context) {
     @Provides
     @Singleton
-    fun providesExoPlayerFacade() : ExoPlayerFacade {
+    fun providesExoPlayerFacade(): ExoPlayerFacade {
         return ExoPlayerFacade(context = context)
     }
 }

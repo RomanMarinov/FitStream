@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.androidTestImplementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -45,6 +47,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
+
     kotlinOptions {
         jvmTarget = "21"
     }
@@ -89,17 +101,26 @@ dependencies {
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
 
-    // test
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // test coroutine
     testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+
+    // unit test
+    testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.androidx.lifecycle.runtime.testing)
-    androidTestImplementation("io.mockk:mockk-android:1.13.9")
     testImplementation(kotlin("test"))
-    testImplementation("junit:junit:4.13.2")
+
+    // ui test
+    androidTestImplementation(libs.androidx.junit.v115)
+    androidTestImplementation(libs.androidx.espresso.core.v351)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    debugImplementation(libs.androidx.fragment.testing)
+    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
 
     // lifecycle viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)

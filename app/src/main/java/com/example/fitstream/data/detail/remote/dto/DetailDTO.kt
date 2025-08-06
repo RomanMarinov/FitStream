@@ -11,7 +11,7 @@ data class DetailDTO(
     @SerializedName("link")
     val link: String
 ) {
-    fun mapToDomain() : Detail {
+    fun mapToDomain(): Detail {
         return Detail(
             id = id,
             duration = duration,

@@ -238,7 +238,8 @@ class WorkoutViewModelTest {
                 ignoreCase = true
             )
         }
-        val actualWorkoutByTitle: List<Workout> = savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] ?: emptyList()
+        val actualWorkoutByTitle: List<Workout> =
+            savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] ?: emptyList()
         assertEquals(filteringWorkoutsByTitle, actualWorkoutByTitle)
 
 
@@ -247,7 +248,8 @@ class WorkoutViewModelTest {
         val actualTextQueryEmpty = savedStateHandle[Constants.WorkoutKeys.TEXT_QUERY] ?: "not_set"
         assertEquals(textQueryEmpty, actualTextQueryEmpty)
 
-        val actualWorkoutEmpty: List<Workout> = savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] ?: emptyList()
+        val actualWorkoutEmpty: List<Workout> =
+            savedStateHandle[Constants.WorkoutKeys.WORKOUTS_BY_TITLE] ?: emptyList()
         assertEquals(emptyList<Workout>(), actualWorkoutEmpty)
 
 
@@ -257,7 +259,8 @@ class WorkoutViewModelTest {
         assertEquals(emptyList<Workout>(), actual)
 
 
-        val actualAllWorkoutsSaved: List<Workout> = savedStateHandle[Constants.WorkoutKeys.WORKOUTS] ?: emptyList()
+        val actualAllWorkoutsSaved: List<Workout> =
+            savedStateHandle[Constants.WorkoutKeys.WORKOUTS] ?: emptyList()
         assertEquals(emptyList<Workout>(), actualAllWorkoutsSaved)
     }
 

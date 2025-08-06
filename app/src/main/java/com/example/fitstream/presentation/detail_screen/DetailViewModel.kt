@@ -47,7 +47,10 @@ class DetailViewModel @AssistedInject constructor(
                 _videoWorkoutUIState.value = VideoUIState.Success(videoWorkout)
             }.onFailure { error ->
                 _videoWorkoutUIState.value =
-                    VideoUIState.Error(error.message ?: resourceProvider.getResourceString(R.string.error_download_video))
+                    VideoUIState.Error(
+                        error.message
+                            ?: resourceProvider.getResourceString(R.string.error_download_video)
+                    )
             }
         }
     }

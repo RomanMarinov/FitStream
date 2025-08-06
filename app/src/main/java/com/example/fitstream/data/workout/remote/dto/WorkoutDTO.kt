@@ -20,7 +20,8 @@ data class WorkoutDTO(
         id = id,
         title = title,
         description = description,
-        type = WorkoutType.fromId(type) ?: throw IllegalArgumentException("Unknown workout type: $type"),
+        type = WorkoutType.fromId(type)
+            ?: throw IllegalArgumentException("Unknown workout type: $type"),
         duration = duration
     )
 }

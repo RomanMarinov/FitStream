@@ -12,7 +12,6 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.example.fitstream.BuildConfig
 import javax.inject.Inject
 
-
 class ExoPlayerFacade @Inject constructor(
     private val context: Context
 ) {

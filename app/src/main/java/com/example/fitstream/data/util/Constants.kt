@@ -5,6 +5,7 @@ object Constants {
         const val EMPTY_RESPONSE = "Пустой ответ от сервера"
         const val ERROR_RESPONSE = "Ошибка запроса"
     }
+
     object Workout {
         const val ERROR_RESPONSE = "Ошибка запроса"
         const val ERROR_NETWORK = "Проблемы с подключением к интернет"
