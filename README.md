@@ -17,6 +17,7 @@ Kotlin, Android XML
 - dagger hilt / dagger, <br/>
 - stateFlow, <br/>
 - coroutine, <br/>
+- unit test, <br/>
 - databinding, <br/>
 - animation, <br/>
 - navigation, <br/>
